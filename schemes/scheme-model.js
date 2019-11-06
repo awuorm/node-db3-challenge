@@ -5,13 +5,28 @@ module.exports = {
   findSteps,
   add,
   update,
-  remove
+  remove,
+  addStep
 };
+
+// function getPosts(userId) {
+//     return db('posts as p')
+//       .join('users as u', 'u.id', 'p.user_id')
+//       .select('p.id', 'u.username', 'p.contents')
+//       .where({ 'u.id': userId });
+//   }
+
+function addStep(step, scheme_id) {
+  return db("steps as st")
+    .where({ scheme_id })
+    .insert(step)
+    .then(ids => findById(ids[0]));
+}
 
 function remove(id) {
   return db("schemes as s")
     .where({ id })
-    .delete();
+    .truncate();
 }
 
 function update(changes, id) {
@@ -34,16 +49,11 @@ function findSteps(id) {
 }
 
 function findById(schemesId) {
-  return db("schemes as s").where({ id: schemesId });
+  return db("schemes as s")
+    .where({ id: schemesId })
+    .first();
 }
 
 function find() {
   return db("schemes as s");
 }
-
-// function getPosts(userId) {
-//     return db('posts as p')
-//       .join('users as u', 'u.id', 'p.user_id')
-//       .select('p.id', 'u.username', 'p.contents')
-//       .where({ 'u.id': userId });
-//   }
